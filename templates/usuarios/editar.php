@@ -43,8 +43,9 @@
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                 <div class="card-body">
-                                    <form action="../../actions/usuarios.php?acao=cadastrar" method="POST">
+                                    <form action="../../actions/usuarios.php?acao=editar" method="POST">
                                         <div class="form-row">
+                                            <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?? ''; ?>">
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="small mb-1">Nome</label>
@@ -62,22 +63,8 @@
                                             <label class="small mb-1">Email</label>
                                             <input class="form-control py-4" name="email" type="email" placeholder="Digite um email" value="<?php echo $_SESSION['email'] ?? ''; ?>" />
                                         </div>
-                                        <div class="form-row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="small mb-1">Senha</label>
-                                                    <input class="form-control py-4" name="senha" type="password" placeholder="Digite uma senha" />
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="small mb-1" for="inputConfirmPassword">Confirmar senha</label>
-                                                    <input class="form-control py-4" name="confirm_senha" type="password" placeholder="Digite uma senha" />
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="form-group mt-4 mb-0">
-                                            <button type="submit" class="btn btn-primary btn-block">Criar Conta</button>
+                                            <button type="submit" class="btn btn-primary btn-block">Editar Conta</button>
                                         </div>
                                     </form>
                                 </div>

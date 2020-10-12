@@ -4,9 +4,8 @@ $username = "root";
 $password = "";
 $dbname = "adega";
 
-// Create connection
+
 $conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+  die("Falha ao realizar a conexão com o banco de dados: " . $conn->connect_error);
 }

@@ -2,6 +2,7 @@ CREATE TABLE usuarios (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     login VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
     senha VARCHAR(255) NOT NULL,
     UNIQUE (login)
 );
