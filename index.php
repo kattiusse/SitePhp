@@ -1,3 +1,2 @@
 <?php
-    header('Location: templates/dashboard.php');
-?>
+header('Location: templates/login.php');

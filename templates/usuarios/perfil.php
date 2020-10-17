@@ -1,4 +1,4 @@
-<?php 
+<?php
 // Verifica se usuário está logado
 require __DIR__."/../../includes/verifica_login.php";
 ?>
@@ -28,7 +28,7 @@ require __DIR__."/../../includes/verifica_login.php";
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
-                        <h1 class="mt-4">Usuários</h1>
+                        <h1 class="mt-4">Perfil de <b><?php echo $_SESSION['auth']['nome']; ?></b></h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Dashboard >> Usuários</li>
                         </ol>
@@ -46,9 +46,40 @@ require __DIR__."/../../includes/verifica_login.php";
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                 <div class="card-body">
-                                    <form action="<?php echo $config['url']; ?>/actions/usuarios.php?acao=editar" method="POST">
-                                        <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?? ''; ?>">
-                                        <?php require __DIR__."/campos.php"; ?>
+                                    <form action="<?php echo $config['url']; ?>/actions/usuarios.php?acao=perfil" method="POST">
+                                        <input type="hidden" name="id" value="<?php echo $_SESSION['auth']['id'] ?? ''; ?>">    
+                                        <div class="form-row">                                            
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="small mb-1">Nome</label>
+                                                    <input class="form-control py-4" type="text" placeholder="Digite um Nome" disabled value="<?php echo $_SESSION['auth']['nome'] ?? ''; ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="small mb-1">Login</label>
+                                                    <input class="form-control py-4"type="text" placeholder="Digite um Login" disabled value="<?php echo $_SESSION['auth']['login'] ?? ''; ?>" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="small mb-1">Email</label>
+                                            <input class="form-control py-4" type="email" placeholder="Digite um email" disabled value="<?php echo $_SESSION['auth']['email'] ?? ''; ?>" />
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="small mb-1">Nova senha</label>
+                                                    <input class="form-control py-4" name="nova_senha" type="password" placeholder="Digite uma nova senha" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="small mb-1">Confirme Nova senha</label>
+                                                    <input class="form-control py-4" name="confirm_nova_senha" type="password" placeholder="Digite a confirmação da nova senha" />
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="form-group mt-4 mb-0">
                                             <button type="submit" class="btn btn-primary btn-block">Editar Conta</button>
                                         </div>

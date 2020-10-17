@@ -1,30 +1,111 @@
 <?php
-// Iniciando sessão
-session_start();
+// Verifica se usuário está logado
+require __DIR__."/../includes/verifica_login.php";
 
-// Incluindo conexão com banco de dados
+// Conexão com banco de dados
 require __DIR__."/../includes/conexao.php";
-
-// Removendo sessões criadas
-unset($_SESSION['message']);
-unset($_SESSION['css']);
-unset($_SESSION['id']);
-unset($_SESSION['nome']);
-unset($_SESSION['login']);
-unset($_SESSION['email']); 
 
 // Tabela do banco de dados
 $tabela = 'usuarios';
 
 // Requisição GET, verificar qual ação 
 switch ($_GET['acao']) {
+    // É logar
+    case 'logar':
+        // Dados enviados
+        if (!empty($_POST['email_login']) && !empty($_POST['senha'])) {
+            // Armazena dados em variáveis
+            $email_login = $_POST['email_login'];
+            $senha = $_POST['senha'];
+
+            // Busca usuário no banco de dados com base no email_login e $senha
+            $sql = "
+                SELECT * FROM {$tabela} 
+                    WHERE (email = '".$email_login."' OR login = '".$email_login."') 
+                        AND senha = '".md5($senha)."' 
+            ";
+
+            // Executa o sql 
+            $query = mysqli_query($conn, $sql);
+
+            // Cria o array da query         
+            $dados = mysqli_fetch_assoc($query);
+
+            // Existe dados
+            if (isset($dados)) {
+                // Armazena dados em sessões de autenticação, para usar no formulário
+                $_SESSION['auth']["id"] = $dados['id'];
+                $_SESSION['auth']["nome"] = $dados['nome'];
+                $_SESSION['auth']["login"] = $dados['login'];
+                $_SESSION['auth']["email"] = $dados['email'];
+
+                // Página de dashboard
+                $page = $config['url']."/templates/dashboard.php";
+            } else {
+                $message = "Dados de acesso inválidos";
+                $css = "danger";
+                $page = $config['url']."/templates/login.php";
+            }
+        } else {
+            $message = "Dados de Acesso são obrigatórios";
+            $css = "danger";
+            $page = $config['url']."/templates/login.php";
+        }
+    break;
+    // Logout
+    case 'logout':
+        // Deleta todas as sessões
+        session_destroy();
+
+        // Página de login
+        $page = $config['url']."/templates/login.php";
+    break;
+    // É perfil
+    case 'perfil':
+        // Dados enviados
+        if (!empty($_POST['nova_senha']) && !empty($_POST['confirm_nova_senha'])) {
+            // Armazena dados em variáveis
+            $id = $_POST['id'];
+            $nova_senha = $_POST['nova_senha'];
+            $confirm_nova_senha = $_POST['confirm_nova_senha'];
+
+            // Verifica se campos de nova senha são iguais
+            if ($nova_senha != $confirm_nova_senha) {
+                $message = 'Senhas não correspondem';
+                $css = 'danger';
+                $page = $config['url']."/templates/usuarios/perfil.php";
+            } else {         
+                // Cria script de update
+                $sql = "UPDATE {$tabela} SET senha = '".md5($nova_senha)."' WHERE id = ".$id;
+
+                // Verifica se o script acima foi executado
+                if ($conn->query($sql) == TRUE) {
+                    $message = 'Cadastro alterado com sucesso';
+                    $css = 'success';
+                } else {
+                    $message = 'Erro ao alterar cadastro';
+                    $css = 'danger';
+                } 
+
+                // Página de listagem
+                $page = $config['url']."/templates/usuarios/index.php";
+            }
+        } else {
+            $message = "Os campos de senhas são obrigatórios";
+            $css = "danger";
+
+            // Página de perfil
+            $page = $config['url']."/templates/usuarios/perfil.php";
+        }
+    break;    
     // É cadastrar
     case 'cadastrar':    
         // Página de cadastro    
-        $page = "../templates/usuarios/cadastrar.php";
+        $page = $config['url']."/templates/usuarios/cadastrar.php";
     
         // Dados enviados
         if ($_POST) {
+
             // Armazena dados em variáveis
             $nome = $_POST["nome"];
             $login = $_POST["login"];
@@ -36,7 +117,7 @@ switch ($_GET['acao']) {
             if (empty($nome) && empty($login) && empty($email) && empty($senha)) {
                 $message = 'Favor preecher os campos obrigatórios';
                 $css = 'danger';
-                $page = "../templates/usuarios/cadastrar.php";
+                $page = $config['url']."/templates/usuarios/cadastrar.php";
             } else {
                 // Armazena dados em sessões, para usar no formulário
                 $_SESSION["nome"] = $nome;
@@ -44,19 +125,24 @@ switch ($_GET['acao']) {
                 $_SESSION["email"] = $email;
 
                 // Busca login no banco de dados
-                $sql = mysqli_query($conn, "SELECT * FROM {$tabela} WHERE login = '".$login."' ");
-                $dados = mysqli_fetch_assoc($sql);
+                $sql = "SELECT * FROM {$tabela} WHERE login = '".$login."' ";
+
+                // Executa o sql
+                $query = mysqli_query($conn, $sql);
+
+                // Cria o array da query
+                $dados = mysqli_fetch_assoc($query);
                 
                 // Verifica se campos de senha são iguais
                 if ($senha != $confirm_senha) {
                     $message = 'Senhas não correspondem';
                     $css = 'danger';
-                    $page = "../templates/usuarios/cadastrar.php";
+                    $page = $config['url']."/templates/usuarios/cadastrar.php";
                 // Verifica se campo login já existe no banco de dados    
                 } else if (!empty($dados['login'])) {
                     $message = 'Já existe um usuário com esse login';
                     $css = 'danger';
-                    $page = "../templates/usuarios/cadastrar.php"; 
+                    $page = $config['url']."/templates/usuarios/cadastrar.php"; 
                 // Validações estão OK       
                 } else {
                     // Cria script de insert, criptografando a senha
@@ -78,13 +164,10 @@ switch ($_GET['acao']) {
                     $conn->close();
 
                     // Página de listagem
-                    $page = "../templates/usuarios/index.php";
+                    $page = $config['url']."/templates/usuarios/index.php";
                 }
             }
-
-            // Cria as sessões com base nas variáveis criadas acima
-            $_SESSION["message"] = $message;
-            $_SESSION["css"] = $css;            
+           
         }
         
         break;
@@ -108,21 +191,22 @@ switch ($_GET['acao']) {
             } else {
                 $message = 'Erro ao alterar cadastro';
                 $css = 'danger';
-            }    
-
-            // Cria as sessões com base nas variáveis criadas acima
-            $_SESSION["message"] = $message;
-            $_SESSION["css"] = $css;
+            }  
 
             // Página de listagem
-            $page = "../templates/usuarios/index.php";
+            $page = $config['url']."/templates/usuarios/index.php";
         } else {
             // Recupera id e armazena em variável
             $id = $_GET['id'];
 
             // Busca usuário no banco de dados com base no id acima
-            $sql = mysqli_query($conn, "SELECT * FROM {$tabela} WHERE id = ".$id);
-            $dados = mysqli_fetch_assoc($sql);
+            $sql = "SELECT * FROM {$tabela} WHERE id = ".$id;
+
+            // Executa o sql
+            $query = mysqli_query($conn, $sql);
+
+            // Cria o array da query
+            $dados = mysqli_fetch_assoc($query);
     
             // Armazena dados em sessões, para usar no formulário
             $_SESSION["id"] = $dados['id'];
@@ -131,7 +215,7 @@ switch ($_GET['acao']) {
             $_SESSION["email"] = $dados['email'];
     
             // Página de edição
-            $page = "../templates/usuarios/editar.php";
+            $page = $config['url']."/templates/usuarios/editar.php";
         }
         break;
     // É deletar    
@@ -154,18 +238,18 @@ switch ($_GET['acao']) {
         // Fecha conexão com banco de dados
         $conn->close();
 
-        // Cria as sessões com base nas variáveis criadas acima
-        $_SESSION["message"] = $message;
-        $_SESSION["css"] = $css;
-
         // Página de listagem
-        $page = "../templates/usuarios/index.php";
+        $page = $config['url']."/templates/usuarios/index.php";
         break;
     // Não é nenhuma ação acima    
     default:
         die('Ação Inválida');
         break;
 }
+
+// Cria as sessões com base nas variáveis criadas acima
+$_SESSION["message"] = $message;
+$_SESSION["css"] = $css;
 
 // Redireciona a página, para a variável {page}
 header("Location: {$page}");

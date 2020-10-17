@@ -1,3 +1,7 @@
+CREATE DATABASE adega;
+
+use adega;
+
 CREATE TABLE usuarios (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
@@ -53,3 +57,5 @@ CREATE TABLE pedidos (
     FOREIGN KEY (id_produto) REFERENCES produtos(id) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
 );
+
+INSERT INTO usuarios(nome, login, email, senha) VALUES ('Usuário de teste','usuario.teste','usuario.teste@gmail.com',md5('123456'))

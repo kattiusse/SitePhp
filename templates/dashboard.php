@@ -1,3 +1,7 @@
+<?php 
+// Verifica se usuário está logado
+require __DIR__."/../includes/verifica_login.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -579,7 +583,7 @@
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
-                    <?php require __DIR__."/includes/footer.php"; ?>
+                    <?php require __DIR__."/../includes/footer.php"; ?>
                 </footer>
             </div>
         </div>
