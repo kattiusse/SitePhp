@@ -28,9 +28,9 @@ require __DIR__."/../../includes/verifica_login.php";
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
-                        <h1 class="mt-4">Usuários</h1>
+                        <h1 class="mt-4">Categorias</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard >> Usuários</li>
+                            <li class="breadcrumb-item active">Dashboard >> Categorias</li>
                         </ol>
 
                         <?php if (!empty($_SESSION["message"])) { ?>
@@ -46,7 +46,7 @@ require __DIR__."/../../includes/verifica_login.php";
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                     <div class="card-header">                                        
-                                        <button class="btn btn-success"><a style="color: #fff; text-decoration:none;" href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=cadastrar"><i class="fas fa-plus mr-1"></i> Adicionar</a></button>
+                                        <button class="btn btn-success"><a style="color: #fff; text-decoration:none;" href="<?php echo $config['url']; ?>/actions/categorias.php?acao=cadastrar"><i class="fas fa-plus mr-1"></i> Adicionar</a></button>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
@@ -54,21 +54,19 @@ require __DIR__."/../../includes/verifica_login.php";
                                                 <thead>
                                                     <tr>
                                                         <th>Nome</th>
-                                                        <th>Login</th>
                                                         <th>Ações</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
                                                         require __DIR__."/../../includes/conexao.php";
-                                                        $sql = mysqli_query($conn, "select * from usuarios");
+                                                        $sql = mysqli_query($conn, "select * from categorias");
                                                         while($dados = mysqli_fetch_assoc($sql)) { ?>
                                                             <tr>
                                                                 <td><?php echo $dados['nome']; ?></td>
-                                                                <td><?php echo $dados['login']; ?></td>
                                                                 <td>
-                                                                    <a href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
-                                                                    <a href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
+                                                                    <a href="<?php echo $config['url']; ?>/actions/categorias.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
+                                                                    <a href="<?php echo $config['url']; ?>/actions/categorias.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
                                                                 </td>
                                                             </tr>
                                                         <?php } 

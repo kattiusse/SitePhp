@@ -8,6 +8,15 @@ require __DIR__."/../includes/conexao.php";
 // Tabela do banco de dados
 $tabela = 'usuarios';
 
+// Destruindo sessão de campos 
+unset($_SESSION['nome']);
+unset($_SESSION['login']);
+unset($_SESSION['email']);
+
+// Destruindo sessão de 'message' e 'css' 
+unset($_SESSION['message']);
+unset($_SESSION['css']);
+
 // Requisição GET, verificar qual ação 
 switch ($_GET['acao']) {
     // É logar
@@ -97,6 +106,10 @@ switch ($_GET['acao']) {
             // Página de perfil
             $page = $config['url']."/templates/usuarios/perfil.php";
         }
+    break; 
+    // É listagem
+    case 'index':
+        $page = $config['url']."/templates/usuarios/index.php";
     break;    
     // É cadastrar
     case 'cadastrar':    
@@ -180,18 +193,34 @@ switch ($_GET['acao']) {
             $nome = $_POST['nome'];
             $login = $_POST['login'];
             $email = $_POST['email'];
-            
-            // Cria script de update
-            $sql = "UPDATE {$tabela} SET nome = '".$nome."', login = '".$login."', email = '".$email."' WHERE id = ".$id;
 
-            // Verifica se o script acima foi executado
-            if ($conn->query($sql) == TRUE) {
-                $message = 'Cadastro alterado com sucesso';
-                $css = 'success';
-            } else {
-                $message = 'Erro ao alterar cadastro';
+            // Busca email no banco de dados
+            $sql = "SELECT * FROM {$tabela} WHERE login = '".$login."' AND id <> ".$id;
+
+            // Executa o sql
+            $query = mysqli_query($conn, $sql);
+
+            // Cria o array da query
+            $dados = mysqli_fetch_assoc($query);            
+
+            // Verifica se email não é vazio
+            if (!empty($dados['login'])) {
+                $message = 'Já existe um usuário com esse login';
                 $css = 'danger';
-            }  
+                $page = $config['url']."/templates/clientes/editar.php";
+            } else {
+                // Cria script de update
+                $sql = "UPDATE {$tabela} SET nome = '".$nome."', login = '".$login."', email = '".$email."' WHERE id = ".$id;
+
+                // Verifica se o script acima foi executado
+                if ($conn->query($sql) == TRUE) {
+                    $message = 'Cadastro alterado com sucesso';
+                    $css = 'success';
+                } else {
+                    $message = 'Erro ao alterar cadastro';
+                    $css = 'danger';
+                }  
+            }
 
             // Página de listagem
             $page = $config['url']."/templates/usuarios/index.php";

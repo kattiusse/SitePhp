@@ -45,38 +45,14 @@ require __DIR__."/../../includes/verifica_login.php";
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="card mb-4">
-                                    <div class="card-header">                                        
-                                        <button class="btn btn-success"><a style="color: #fff; text-decoration:none;" href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=cadastrar"><i class="fas fa-plus mr-1"></i> Adicionar</a></button>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nome</th>
-                                                        <th>Login</th>
-                                                        <th>Ações</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                        require __DIR__."/../../includes/conexao.php";
-                                                        $sql = mysqli_query($conn, "select * from usuarios");
-                                                        while($dados = mysqli_fetch_assoc($sql)) { ?>
-                                                            <tr>
-                                                                <td><?php echo $dados['nome']; ?></td>
-                                                                <td><?php echo $dados['login']; ?></td>
-                                                                <td>
-                                                                    <a href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
-                                                                    <a href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
-                                                                </td>
-                                                            </tr>
-                                                        <?php } 
-                                                    ?>
-                                                </tbody>
-                                            </table>
+                                <div class="card-body">
+                                    <form action="<?php echo $config['url']; ?>/actions/categorias.php?acao=editar" method="POST">
+                                        <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?? ''; ?>">
+                                        <?php require __DIR__."/campos.php"; ?>
+                                        <div class="form-group mt-4 mb-0">
+                                            <button type="submit" class="btn btn-primary btn-block">Editar</button>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -90,8 +66,5 @@ require __DIR__."/../../includes/verifica_login.php";
         <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="<?php echo $config['url']; ?>/public/js/scripts.js"></script>
-        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-        <script src="<?php echo $config['url']; ?>/public/assets/demo/datatables-demo.js"></script>
     </body>
 </html>
