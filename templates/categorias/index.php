@@ -60,7 +60,7 @@ require __DIR__."/../../includes/verifica_login.php";
                                                 <tbody>
                                                     <?php
                                                         require __DIR__."/../../includes/conexao.php";
-                                                        $sql = mysqli_query($conn, "select * from categorias");
+                                                        $sql = mysqli_query($conn, "SELECT * FROM categorias");
                                                         while($dados = mysqli_fetch_assoc($sql)) { ?>
                                                             <tr>
                                                                 <td><?php echo $dados['nome']; ?></td>

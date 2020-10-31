@@ -161,7 +161,7 @@ switch ($_GET['acao']) {
                     // Cria script de insert, criptografando a senha
                     $sql = "
                         INSERT INTO {$tabela} (nome, login, email, senha)
-                        VALUES ('".$nome."', '".$login."', '".$email."', '".md5($senha)."')
+                            VALUES ('".$nome."', '".$login."', '".$email."', '".md5($senha)."')
                     ";
     
                     // Verifica se o script acima foi executado
@@ -210,7 +210,10 @@ switch ($_GET['acao']) {
                 $page = $config['url']."/templates/clientes/editar.php";
             } else {
                 // Cria script de update
-                $sql = "UPDATE {$tabela} SET nome = '".$nome."', login = '".$login."', email = '".$email."' WHERE id = ".$id;
+                $sql = "
+                    UPDATE {$tabela} SET nome = '".$nome."', login = '".$login."', email = '".$email."' 
+                        WHERE id = ".$id
+                    ;
 
                 // Verifica se o script acima foi executado
                 if ($conn->query($sql) == TRUE) {

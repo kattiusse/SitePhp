@@ -28,9 +28,9 @@ require __DIR__."/../../includes/verifica_login.php";
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
-                        <h1 class="mt-4">Fornecedores</h1>
+                        <h1 class="mt-4">Pedidos</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard >> Fornecedores</li>
+                            <li class="breadcrumb-item active">Dashboard >> Pedidos</li>
                         </ol>
 
                         <?php if (!empty($_SESSION["message"])) { ?>
@@ -46,33 +46,42 @@ require __DIR__."/../../includes/verifica_login.php";
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                     <div class="card-header">                                        
-                                        <button class="btn btn-success"><a style="color: #fff; text-decoration:none;" href="<?php echo $config['url']; ?>/actions/fornecedores.php?acao=cadastrar"><i class="fas fa-plus mr-1"></i> Adicionar</a></button>
+                                        <button class="btn btn-success"><a style="color: #fff; text-decoration:none;" href="<?php echo $config['url']; ?>/actions/pedidos.php?acao=cadastrar"><i class="fas fa-plus mr-1"></i> Adicionar</a></button>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                                 <thead>
                                                     <tr>
-                                                        <th>Razão Social</th>
-                                                        <th>Nome Fantasia</th>
-                                                        <th>Cnpj</th>
-                                                        <th>Email</th>
+                                                        <th>Nro. Pedido</th>
+                                                        <th>Cliente</th>
+                                                        <th>Produto</th>
+                                                        <th>Quantidade</th>
+                                                        <th>Valor Total</th>
+                                                        <th>Status</th>
                                                         <th>Ações</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
                                                         require __DIR__."/../../includes/conexao.php";
-                                                        $sql = mysqli_query($conn, "SELECT * FROM fornecedores");
+                                                        $sql = mysqli_query($conn, "
+                                                            SELECT 
+                                                                p.id, p.quantidade, p.valor_total, p.status, c.nome AS cliente, pr.nome AS produto
+                                                                    FROM pedidos AS p 
+                                                                        INNER JOIN clientes AS c ON p.id_cliente = c.id
+                                                                            INNER JOIN produtos AS pr ON p.id_produto = pr.id
+                                                        ");
                                                         while($dados = mysqli_fetch_assoc($sql)) { ?>
                                                             <tr>
-                                                                <td><?php echo $dados['razao_social']; ?></td>
-                                                                <td><?php echo $dados['nome_fantasia']; ?></td>
-                                                                <td><?php echo $dados['cnpj']; ?></td>
-                                                                <td><?php echo $dados['email']; ?></td>
+                                                                <td><?php echo $dados['id']; ?></td>
+                                                                <td><?php echo $dados['cliente']; ?></td>
+                                                                <td><?php echo $dados['produto']; ?></td>
+                                                                <td><?php echo $dados['quantidade']; ?></td>
+                                                                <td><?php echo "R$ ".number_format($dados['valor_total'], 2, ",", "."); ?></td>
+                                                                <td><?php echo $dados['status']; ?></td>
                                                                 <td>
-                                                                    <a href="<?php echo $config['url']; ?>/actions/fornecedores.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
-                                                                    <a href="<?php echo $config['url']; ?>/actions/fornecedores.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
+                                                                    <a href="<?php echo $config['url']; ?>/actions/pedidos.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
                                                                 </td>
                                                             </tr>
                                                         <?php } 

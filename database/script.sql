@@ -35,13 +35,14 @@ CREATE TABLE fornecedores (
 
 CREATE TABLE produtos (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_fornecedor INT(5) UNSIGNED NOT NULL,
-    nome VARCHAR(50) NOT NULL,
+    id_fornecedor INT(5) UNSIGNED NOT NULL,    
     id_categoria INT(5) UNSIGNED NOT NULL,
+    nome VARCHAR(50) NOT NULL,
+    descricao VARCHAR(150) NULL DEFAULT,
     quantidade INT(5) NOT NULL,
-    preco FLOAT(10,2) NOT NULL,
+    preco FLOAT(10, 2) NOT NULL,
+    valor_total FLOAT(10, 2) NOT NULL,    
     data_entrada DATETIME NOT NULL,
-    UNIQUE (nome),
     FOREIGN KEY (id_fornecedor) REFERENCES fornecedores(id) ON DELETE CASCADE,
     FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE CASCADE
 );
@@ -51,7 +52,9 @@ CREATE TABLE pedidos (
     id_cliente INT(5) UNSIGNED NOT NULL,
     id_produto INT(5) UNSIGNED NOT NULL,
     id_usuario INT(5) UNSIGNED NOT NULL,
-    valor_total FLOAT(10,2) NOT NULL,
+    quantidade INT(5) NOT NULL,
+    valor_total FLOAT(10, 2) NOT NULL,
+    status ENUM('ABERTO', 'FECHADO') NOT NULL,
     data_pedido DATETIME NOT NULL,
     FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE,
     FOREIGN KEY (id_produto) REFERENCES produtos(id) ON DELETE CASCADE,

@@ -61,10 +61,10 @@ switch ($_GET['acao']) {
                     $page = $config['url']."/templates/clientes/cadastrar.php"; 
                 // Validações estão OK       
                 } else {
-                    // Cria script de insert, criptografando a senha
+                    // Cria script de insert
                     $sql = "
                         INSERT INTO {$tabela} (nome, email)
-                        VALUES ('".$nome."', '".$email."')
+                            VALUES ('".$nome."', '".$email."')
                     ";
     
                     // Verifica se o script acima foi executado
@@ -111,7 +111,10 @@ switch ($_GET['acao']) {
                 $page = $config['url']."/templates/clientes/editar.php";
             } else {
                 // Cria script de update
-                $sql = "UPDATE {$tabela} SET nome = '".$nome."', email = '".$email."' WHERE id = ".$id;
+                $sql = "
+                    UPDATE {$tabela} SET nome = '".$nome."', email = '".$email."' 
+                        WHERE id = ".$id
+                ;
 
                 // Verifica se o script acima foi executado
                 if ($conn->query($sql) == TRUE) {

@@ -67,10 +67,10 @@ switch ($_GET['acao']) {
                     $page = $config['url']."/templates/fornecedores/cadastrar.php"; 
                 // Validações estão OK       
                 } else {
-                    // Cria script de insert, criptografando a senha
+                    // Cria script de insert
                     $sql = "
                         INSERT INTO {$tabela} (razao_social, nome_fantasia, cnpj, email)
-                        VALUES ('".$razao_social."', '".$nome_fantasia."', '".$cnpj."', '".$email."')
+                            VALUES ('".$razao_social."', '".$nome_fantasia."', '".$cnpj."', '".$email."')
                     ";
     
                     // Verifica se o script acima foi executado

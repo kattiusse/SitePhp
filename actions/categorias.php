@@ -58,10 +58,10 @@ switch ($_GET['acao']) {
                     $page = $config['url']."/templates/categorias/cadastrar.php"; 
                 // Validações estão OK       
                 } else {
-                    // Cria script de insert, criptografando a senha
+                    // Cria script de insert
                     $sql = "
                         INSERT INTO {$tabela} (nome)
-                        VALUES ('".$nome."')
+                            VALUES ('".$nome."')
                     ";
     
                     // Verifica se o script acima foi executado
@@ -92,7 +92,10 @@ switch ($_GET['acao']) {
             $nome = $_POST['nome'];
             
             // Cria script de update
-            $sql = "UPDATE {$tabela} SET nome = '".$nome."' WHERE id = ".$id;
+            $sql = "
+                UPDATE {$tabela} SET nome = '".$nome."' 
+                    WHERE id = ".$id
+            ;
 
             // Verifica se o script acima foi executado
             if ($conn->query($sql) == TRUE) {

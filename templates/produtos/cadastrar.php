@@ -28,9 +28,9 @@ require __DIR__."/../../includes/verifica_login.php";
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
-                        <h1 class="mt-4">Categorias</h1>
+                        <h1 class="mt-4">Produtos</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard >> Categorias</li>
+                            <li class="breadcrumb-item active">Dashboard >> Produtos</li>
                         </ol>
 
                         <?php if (!empty($_SESSION["message"])) { ?>
@@ -46,7 +46,7 @@ require __DIR__."/../../includes/verifica_login.php";
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                 <div class="card-body">
-                                    <form action="<?php echo $config['url']; ?>/actions/categorias.php?acao=cadastrar" method="POST">
+                                    <form action="<?php echo $config['url']; ?>/actions/produtos.php?acao=cadastrar" method="POST">
                                         <?php require __DIR__."/campos.php"; ?>
                                         <div class="form-group mt-4 mb-0">
                                             <button type="submit" class="btn btn-primary btn-block">Salvar</button>

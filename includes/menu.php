@@ -18,7 +18,15 @@
         </a>
         <a class="nav-link" href="<?php echo $config['url']; ?>/actions/fornecedores.php?acao=index">
             <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
-            Fornecedores
+            &nbsp;Fornecedores
+        </a>
+        <a class="nav-link" href="<?php echo $config['url']; ?>/actions/produtos.php?acao=index">
+            <div class="sb-nav-link-icon"><i class="fas fa-glass-cheers"></i></div>
+            Produtos
+        </a>
+        <a class="nav-link" href="<?php echo $config['url']; ?>/actions/pedidos.php?acao=index">
+            <div class="sb-nav-link-icon"><i class="fas fa-clipboard-list"></i></div>
+            &nbsp;Pedidos
         </a>
     </div>
 </div>

@@ -28,9 +28,9 @@ require __DIR__."/../../includes/verifica_login.php";
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
-                        <h1 class="mt-4">Fornecedores</h1>
+                        <h1 class="mt-4">Produtos</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard >> Fornecedores</li>
+                            <li class="breadcrumb-item active">Dashboard >> Produtos</li>
                         </ol>
 
                         <?php if (!empty($_SESSION["message"])) { ?>
@@ -46,33 +46,44 @@ require __DIR__."/../../includes/verifica_login.php";
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                     <div class="card-header">                                        
-                                        <button class="btn btn-success"><a style="color: #fff; text-decoration:none;" href="<?php echo $config['url']; ?>/actions/fornecedores.php?acao=cadastrar"><i class="fas fa-plus mr-1"></i> Adicionar</a></button>
+                                        <button class="btn btn-success"><a style="color: #fff; text-decoration:none;" href="<?php echo $config['url']; ?>/actions/produtos.php?acao=cadastrar"><i class="fas fa-plus mr-1"></i> Adicionar</a></button>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                                 <thead>
                                                     <tr>
-                                                        <th>Razão Social</th>
-                                                        <th>Nome Fantasia</th>
-                                                        <th>Cnpj</th>
-                                                        <th>Email</th>
+                                                        <th>Fornecedor</th>                                                        
+                                                        <th>Categoria</th>
+                                                        <th>Produto</th>
+                                                        <th>Quantidade</th>
+                                                        <th>Valor Unitário</th>
+                                                        <th>Valor Total</th>
                                                         <th>Ações</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
                                                         require __DIR__."/../../includes/conexao.php";
-                                                        $sql = mysqli_query($conn, "SELECT * FROM fornecedores");
+                                                        $sql = mysqli_query($conn, "
+                                                            SELECT 
+                                                                p.id, p.nome, p.quantidade, p.preco, p.valor_total, f.nome_fantasia AS fornecedor, c.nome AS categoria
+                                                                    FROM produtos AS p 
+                                                                        INNER JOIN fornecedores AS f ON p.id_fornecedor = f.id
+                                                                            INNER JOIN categorias AS c ON p.id_categoria = c.id
+                                                                                WHERE p.quantidade > 0
+                                                        ");
                                                         while($dados = mysqli_fetch_assoc($sql)) { ?>
                                                             <tr>
-                                                                <td><?php echo $dados['razao_social']; ?></td>
-                                                                <td><?php echo $dados['nome_fantasia']; ?></td>
-                                                                <td><?php echo $dados['cnpj']; ?></td>
-                                                                <td><?php echo $dados['email']; ?></td>
+                                                                <td><?php echo $dados['fornecedor']; ?></td>                                                                
+                                                                <td><?php echo $dados['categoria']; ?></td>
+                                                                <td><?php echo $dados['nome']; ?></td>
+                                                                <td><?php echo $dados['quantidade']; ?></td>
+                                                                <td><?php echo "R$ ".number_format($dados['preco'], 2, ",", "."); ?></td>
+                                                                <td><?php echo "R$ ".number_format($dados['valor_total'], 2, ",", "."); ?></td>
                                                                 <td>
-                                                                    <a href="<?php echo $config['url']; ?>/actions/fornecedores.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
-                                                                    <a href="<?php echo $config['url']; ?>/actions/fornecedores.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
+                                                                    <a href="<?php echo $config['url']; ?>/actions/produtos.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
+                                                                    <a href="<?php echo $config['url']; ?>/actions/produtos.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
                                                                 </td>
                                                             </tr>
                                                         <?php } 
