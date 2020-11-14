@@ -59,6 +59,7 @@ require __DIR__."/../../includes/verifica_login.php";
                                                         <th>Quantidade</th>
                                                         <th>Valor Total</th>
                                                         <th>Status</th>
+                                                        <th>Data</th>
                                                         <th>Ações</th>
                                                     </tr>
                                                 </thead>
@@ -67,12 +68,14 @@ require __DIR__."/../../includes/verifica_login.php";
                                                         require __DIR__."/../../includes/conexao.php";
                                                         $sql = mysqli_query($conn, "
                                                             SELECT 
-                                                                p.id, p.quantidade, p.valor_total, p.status, c.nome AS cliente, pr.nome AS produto
+                                                                p.id, p.quantidade, p.valor_total, p.status,  p.data_pedido, c.nome AS cliente, pr.nome AS produto
                                                                     FROM pedidos AS p 
                                                                         INNER JOIN clientes AS c ON p.id_cliente = c.id
                                                                             INNER JOIN produtos AS pr ON p.id_produto = pr.id
                                                         ");
-                                                        while($dados = mysqli_fetch_assoc($sql)) { ?>
+                                                        while($dados = mysqli_fetch_assoc($sql)) { 
+                                                            $data = new DateTime($dados['data_pedido']);
+                                                        ?>
                                                             <tr>
                                                                 <td><?php echo $dados['id']; ?></td>
                                                                 <td><?php echo $dados['cliente']; ?></td>
@@ -80,6 +83,7 @@ require __DIR__."/../../includes/verifica_login.php";
                                                                 <td><?php echo $dados['quantidade']; ?></td>
                                                                 <td><?php echo "R$ ".number_format($dados['valor_total'], 2, ",", "."); ?></td>
                                                                 <td><?php echo $dados['status']; ?></td>
+                                                                <td><?php echo $data->format('d/m/Y') ?></td>
                                                                 <td>
                                                                     <a href="<?php echo $config['url']; ?>/actions/pedidos.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
                                                                 </td>

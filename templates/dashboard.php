@@ -33,58 +33,11 @@ require __DIR__."/../includes/verifica_login.php";
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
                         <div class="row">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Primary Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">Warning Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">Success Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Danger Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-area mr-1"></i>
-                                        Venda Anual
-                                    </div>
-                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
+                            <div class="col-xl-12">
+                                <div class="card mb-8">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar mr-1"></i>
-                                        Venda Mensal 
+                                        Gráfico de Vendas - Ano base <?php echo date('Y'); ?> 
                                     </div>
                                     <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                                 </div>
@@ -104,7 +57,6 @@ require __DIR__."/../includes/verifica_login.php";
                                                 <th>Nome do Produto</th>
                                                 <th>Quantidade</th>
                                                 <th>Valor Total</th>
-                                                <th>Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -123,10 +75,6 @@ require __DIR__."/../includes/verifica_login.php";
                                                         <td><?php echo $dados['nome']; ?></td>
                                                         <td><?php echo $dados['quantidade']; ?></td>
                                                         <td><?php echo "R$ ".number_format($dados['valor_total'], 2, ",", "."); ?></td>
-                                                        <td>
-                                                            <a href="<?php echo $config['url']; ?>/actions/produtos.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
-                                                            <a href="<?php echo $config['url']; ?>/actions/produtos.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
-                                                        </td>
                                                     </tr>
                                                 <?php } 
                                             ?>
@@ -146,10 +94,104 @@ require __DIR__."/../includes/verifica_login.php";
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="../public/js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="../public/assets/demo/chart-area-demo.js"></script>
-        <script src="../public/assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
         <script src="../public/assets/demo/datatables-demo.js"></script>
     </body>
 </html>
+
+<?php
+$sqlBarras = mysqli_query($conn, "
+    SELECT 
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '01') AS 'janeiro',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '02') AS 'fevereiro',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '03') AS 'marco',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '04') AS 'abril',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '05') AS 'maio',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '06') AS 'junho',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '07') AS 'julho',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '08') AS 'agosto',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '09') AS 'setembro',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '10') AS 'outubro',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '11') AS 'novembro',
+        (SELECT sum(quantidade) FROM pedidos WHERE YEAR(data_pedido) = '".date('Y')."' AND MONTH(data_pedido) = '12') AS 'dezembro'
+");
+$barras = mysqli_fetch_assoc($sqlBarras);
+?>
+
+<script>
+$(document).ready(function() {
+    // Set new default font family and font color to mimic Bootstrap's default styling
+    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+    Chart.defaults.global.defaultFontColor = '#292b2c';
+
+    // Bar Chart Example
+    var ctx = document.getElementById("myBarChart");
+    var myLineChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [
+                "Janeiro", 
+                "Fevereiro", 
+                "Março", 
+                "Abril", 
+                "Maio", 
+                "Junho", 
+                "Julho", 
+                "Agosto", 
+                "Setembro", 
+                "Outubro", 
+                "Novembro", 
+                "Dezembro"
+            ],
+            datasets: [{
+                label: "Quantidade",
+                backgroundColor: "rgba(2,117,216,1)",
+                borderColor: "rgba(2,117,216,1)",
+                data: [
+                    <?php echo $barras['janeiro']; ?>,
+                    <?php echo $barras['fevereiro']; ?>,
+                    <?php echo $barras['marco']; ?>,
+                    <?php echo $barras['abril']; ?>,
+                    <?php echo $barras['maio']; ?>,
+                    <?php echo $barras['junho']; ?>,
+                    <?php echo $barras['julho']; ?>,
+                    <?php echo $barras['agosto']; ?>,
+                    <?php echo $barras['setembro']; ?>,
+                    <?php echo $barras['outubro']; ?>,
+                    <?php echo $barras['novembro']; ?>,
+                    <?php echo $barras['dezembro']; ?>
+                ],
+            }],
+        },
+        options: {
+            scales: {
+            xAxes: [{
+                time: {
+                    unit: 'month'
+                },
+                gridLines: {
+                    display: false
+                },
+                ticks: {
+                    maxTicksLimit: 12
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    min: 0,
+                    max: 300,
+                    maxTicksLimit: 5
+                },
+                gridLines: {
+                    display: true
+                }
+            }],
+            },
+            legend: {
+                display: false
+            }
+        }
+    });
+});
+</script>
