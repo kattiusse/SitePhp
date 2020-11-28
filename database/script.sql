@@ -8,6 +8,7 @@ CREATE TABLE usuarios (
     login VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     senha VARCHAR(255) NOT NULL,
+    perfil ENUM('USUARIO', 'ADMIN') NOT NULL,
     UNIQUE (login)
 );
 

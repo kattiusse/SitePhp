@@ -8,7 +8,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Adega Kachorro Preto</title>
-        <link href="../public/css/styles.css" rel="stylesheet" />
+        <link href="../public/css/styles.css" rel="stylesheet" />      
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -41,7 +41,7 @@
                                             </div>
                                             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">                                                
                                                 <button type="submit" class="btn btn-primary">Entrar</button>
-                                                <a class="small" href="password.html">Esqueci minha senha</a>
+                                                <!--<a class="small" href="password.html">Esqueci minha senha</a>-->
                                             </div>
                                         </form>
                                     </div>

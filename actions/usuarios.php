@@ -12,6 +12,7 @@ $tabela = 'usuarios';
 unset($_SESSION['nome']);
 unset($_SESSION['login']);
 unset($_SESSION['email']);
+unset($_SESSION['perfil']);
 
 // Destruindo sessão de 'message' e 'css' 
 unset($_SESSION['message']);
@@ -47,6 +48,7 @@ switch ($_GET['acao']) {
                 $_SESSION['auth']["nome"] = $dados['nome'];
                 $_SESSION['auth']["login"] = $dados['login'];
                 $_SESSION['auth']["email"] = $dados['email'];
+                $_SESSION['auth']["perfil"] = $dados['perfil'];
 
                 // Página de dashboard
                 $page = $config['url']."/templates/dashboard.php";
@@ -125,6 +127,7 @@ switch ($_GET['acao']) {
             $email = $_POST["email"];
             $senha = $_POST["senha"];
             $confirm_senha = $_POST["confirm_senha"];
+            $perfil = $_POST["perfil"];
 
             // Campos obrigatórios foram enviados
             if (empty($nome) && empty($login) && empty($email) && empty($senha)) {
@@ -136,6 +139,7 @@ switch ($_GET['acao']) {
                 $_SESSION["nome"] = $nome;
                 $_SESSION["login"] = $login;
                 $_SESSION["email"] = $email;
+                $_SESSION["perfil"] = $perfil;
 
                 // Busca login no banco de dados
                 $sql = "SELECT * FROM {$tabela} WHERE login = '".$login."' ";
@@ -160,8 +164,8 @@ switch ($_GET['acao']) {
                 } else {
                     // Cria script de insert, criptografando a senha
                     $sql = "
-                        INSERT INTO {$tabela} (nome, login, email, senha)
-                            VALUES ('".$nome."', '".$login."', '".$email."', '".md5($senha)."')
+                        INSERT INTO {$tabela} (nome, login, email, senha, perfil)
+                            VALUES ('".$nome."', '".$login."', '".$email."', '".md5($senha)."', '".$perfil."')
                     ";
     
                     // Verifica se o script acima foi executado
@@ -179,8 +183,7 @@ switch ($_GET['acao']) {
                     // Página de listagem
                     $page = $config['url']."/templates/usuarios/index.php";
                 }
-            }
-           
+            }           
         }
         
         break;
@@ -193,6 +196,7 @@ switch ($_GET['acao']) {
             $nome = $_POST['nome'];
             $login = $_POST['login'];
             $email = $_POST['email'];
+            $perfil = $_POST['perfil'];
 
             // Busca email no banco de dados
             $sql = "SELECT * FROM {$tabela} WHERE login = '".$login."' AND id <> ".$id;
@@ -211,7 +215,7 @@ switch ($_GET['acao']) {
             } else {
                 // Cria script de update
                 $sql = "
-                    UPDATE {$tabela} SET nome = '".$nome."', login = '".$login."', email = '".$email."' 
+                    UPDATE {$tabela} SET nome = '".$nome."', login = '".$login."', email = '".$email."', perfil = '".$perfil."' 
                         WHERE id = ".$id
                     ;
 
@@ -231,23 +235,30 @@ switch ($_GET['acao']) {
             // Recupera id e armazena em variável
             $id = $_GET['id'];
 
-            // Busca usuário no banco de dados com base no id acima
-            $sql = "SELECT * FROM {$tabela} WHERE id = ".$id;
+            // Sessão do usuário logado é igual ao id enviado para edição
+            if (($_SESSION['auth']["perfil"] == 'ADMIN') || ($_SESSION['auth']["id"] == $id)) {
+                // Busca usuário no banco de dados com base no id acima
+                $sql = "SELECT * FROM {$tabela} WHERE id = ".$id;
 
-            // Executa o sql
-            $query = mysqli_query($conn, $sql);
+                // Executa o sql
+                $query = mysqli_query($conn, $sql);
 
-            // Cria o array da query
-            $dados = mysqli_fetch_assoc($query);
-    
-            // Armazena dados em sessões, para usar no formulário
-            $_SESSION["id"] = $dados['id'];
-            $_SESSION["nome"] = $dados['nome'];
-            $_SESSION["login"] = $dados['login'];
-            $_SESSION["email"] = $dados['email'];
-    
-            // Página de edição
-            $page = $config['url']."/templates/usuarios/editar.php";
+                // Cria o array da query
+                $dados = mysqli_fetch_assoc($query);
+        
+                // Armazena dados em sessões, para usar no formulário
+                $_SESSION["id"] = $dados['id'];
+                $_SESSION["nome"] = $dados['nome'];
+                $_SESSION["login"] = $dados['login'];
+                $_SESSION["email"] = $dados['email'];
+                $_SESSION["perfil"] = $dados['perfil'];
+        
+                // Página de edição
+                $page = $config['url']."/templates/usuarios/editar.php";
+            } else {
+                // Página de listagem
+                $page = $config['url']."/templates/usuarios/index.php";
+            }
         }
         break;
     // É deletar    
@@ -255,20 +266,23 @@ switch ($_GET['acao']) {
         // Recupera id e armazena em variável
         $id = $_GET['id'];
 
-        // Cria script de update
-        $sql = "DELETE FROM {$tabela} WHERE id = ".$id;
+        // Sessão do usuário logado é igual ao id enviado para edição
+        if (($_SESSION['auth']["perfil"] == 'ADMIN') || ($_SESSION['auth']["id"] == $id)) {
+            // Cria script de update
+            $sql = "DELETE FROM {$tabela} WHERE id = ".$id;
 
-        // Verifica se o script acima foi executado
-        if ($conn->query($sql) == TRUE) {
-            $message = 'Cadastro deletado com sucesso';
-            $css = 'success';
-        } else {
-            $message = 'Erro ao deletar cadastro';
-            $css = 'danger';
-        }
+            // Verifica se o script acima foi executado
+            if ($conn->query($sql) == TRUE) {
+                $message = 'Cadastro deletado com sucesso';
+                $css = 'success';
+            } else {
+                $message = 'Erro ao deletar cadastro';
+                $css = 'danger';
+            }
 
-        // Fecha conexão com banco de dados
-        $conn->close();
+            // Fecha conexão com banco de dados
+            $conn->close();
+        }  
 
         // Página de listagem
         $page = $config['url']."/templates/usuarios/index.php";

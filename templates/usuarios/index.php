@@ -66,10 +66,12 @@ require __DIR__."/../../includes/verifica_login.php";
                                                             <tr>
                                                                 <td><?php echo $dados['nome']; ?></td>
                                                                 <td><?php echo $dados['login']; ?></td>
-                                                                <td>
-                                                                    <a href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
-                                                                    <a href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
-                                                                </td>
+                                                                <?php if (($_SESSION['auth']["perfil"] == 'ADMIN') || ($_SESSION['auth']["id"] == $dados['id'])) { ?>
+                                                                    <td>
+                                                                        <a href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=editar&id=<?php echo $dados['id']; ?>"><i class="fas fa-pencil-alt"></i></a> &nbsp;
+                                                                        <a href="<?php echo $config['url']; ?>/actions/usuarios.php?acao=deletar&id=<?php echo $dados['id']; ?>"><i class="fas fa-trash"></i></a>
+                                                                    </td>
+                                                                <?php } ?>
                                                             </tr>
                                                         <?php } 
                                                     ?>
